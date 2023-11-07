@@ -3,6 +3,9 @@ from typing import Optional
 import typer
 
 from guclimate import __app_name__, __version__
+import inquirer
+
+import guclimate.cds as cds
 
 app = typer.Typer()
 
@@ -24,3 +27,27 @@ def main(
     )
 ) -> None:
     return
+
+@app.command()
+def anomalies():
+    questions = [
+    inquirer.List('variable',
+                    message="Which variable are you interested in?",
+                    choices=[("Surface air temperature", "surface_air_temperature"), ("Precipitation", "precipitation"), ("Sea-ice cover", "sea_ice_cover")],
+                ),
+    inquirer.List('aggregation',
+                    message="Aggregation type?",
+                    choices=[("Monthly means", "1_month_mean")],
+                ),
+    inquirer.Text(name='years', 
+                  message="Which year(s) are you interested in? Define a range (e.g. 1979-2023) or a comma-separated list of values (e.g. 2023, 2022)"),
+    inquirer.Text(name='months', 
+                  message="Which months(s) are you interested in? Define a range (e.g. 01-12) or a comma-separated list of values (e.g. 09,10)"),
+    ]
+    answers = inquirer.prompt(questions)
+    print(f"Answers {answers}")
+    request = cds.AnomalyRequest(answers['variable'])
+    print(f"Request {request.variable}")
+    cds.retrieve(request)
+
+
