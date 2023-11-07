@@ -1,11 +1,10 @@
 from typing import Optional
 
 import typer
-
-from guclimate import __app_name__, __version__
 import inquirer
 
-import guclimate.cds as cds
+from guclimate import __app_name__, __version__
+from guclimate import cds, requests
 
 app = typer.Typer()
 
@@ -39,15 +38,15 @@ def anomalies():
                     message="Aggregation type?",
                     choices=[("Monthly means", "1_month_mean")],
                 ),
-    inquirer.Text(name='years', 
-                  message="Which year(s) are you interested in? Define a range (e.g. 1979-2023) or a comma-separated list of values (e.g. 2023, 2022)"),
-    inquirer.Text(name='months', 
-                  message="Which months(s) are you interested in? Define a range (e.g. 01-12) or a comma-separated list of values (e.g. 09,10)"),
+    # inquirer.Text(name='years', 
+    #               message="Which year(s) are you interested in? Define a range (e.g. 1979-2023) or a comma-separated list of values (e.g. 2023, 2022)"),
+    # inquirer.Text(name='months', 
+    #               message="Which months(s) are you interested in? Define a range (e.g. 01-12) or a comma-separated list of values (e.g. 09,10)"),
     ]
     answers = inquirer.prompt(questions)
-    print(f"Answers {answers}")
-    request = cds.AnomalyRequest(answers['variable'])
-    print(f"Request {request.variable}")
+    # print(f"Answers {answers}")
+    request = requests.AnomalyRequest(answers['variable'])
+    # print(f"Request {request.variable}")
     cds.retrieve(request)
 
 
