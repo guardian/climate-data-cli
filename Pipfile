@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cdsapi = "*"
+cdo = "*"
+typer = {version = "*", extras = ["all"]}
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
