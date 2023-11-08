@@ -15,16 +15,12 @@ def retrieve(request: requests.CDSRequest) -> cdsapi.api.Result:
         request.params(),
         f"{path}.{request.format.value}",
     )
-    print("result retrieved and stored at", f"{path}.zip")
 
-    result = ResultSet(path, request.format)
-
-    return result
+    return ResultSet(path, request.format)
 
 class ResultSet:
     def __init__(self, path, format: requests.ResultFormat) -> None:
         fullPath = f"{path}.{format.value}"
-        print('Unzip file at path', path)
 
         if format == requests.ResultFormat.ZIP:
             shutil.unpack_archive(fullPath, path)

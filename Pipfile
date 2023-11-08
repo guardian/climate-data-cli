@@ -8,6 +8,8 @@ cdsapi = "*"
 cdo = "*"
 typer = {version = "*", extras = ["all"]}
 inquirer = "*"
+xarray = "*"
+cfgrib = "*"
 
 [dev-packages]
 

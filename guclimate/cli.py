@@ -4,7 +4,7 @@ import typer
 import inquirer
 
 from guclimate import __app_name__, __version__
-from guclimate import cds, requests
+from guclimate import cds, requests, dataset
 
 app = typer.Typer()
 
@@ -50,3 +50,7 @@ def anomalies():
     cds.retrieve(request)
 
 
+@app.command()
+def inspect(path: str):
+    ds = dataset.open_dataset(path)
+    print('ds', ds)
