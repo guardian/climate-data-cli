@@ -1,4 +1,5 @@
 import xarray as xr
+import xcdat
 
 # Convert temperature units from Kelvin to Celsius
 # Temperature anomalies should not be converted, because relative temperatures are the same in Kelvin and Celsius
@@ -24,6 +25,7 @@ class Dataset:
         self.ds = ds
 
     def global_mean():
+        pass
         
 
 
