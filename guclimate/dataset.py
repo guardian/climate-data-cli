@@ -10,22 +10,23 @@ import xcdat
 # da_degc.attrs['units'] = '°C'
 
 def open_dataset(path):
-    ds = xr.open_dataset(path, engine='cfgrib')
+    ds = xcdat.open_dataset(path, engine='cfgrib')
 
     # Check if longitude is encoded as [0, 360] range instead of [-180, 180]
-    longitude = ds.coords['longitude'].values
-    if max(longitude) > 180:
-        # Convert longitude to [-180, 180] range
-        ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180)).sortby('longitude')
+    # longitude = ds.coords['longitude'].values
+    # if max(longitude) > 180:
+    #     # Convert longitude to [-180, 180] range
+    #     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180)).sortby('longitude')
 
-    return Dataset(ds['t2m'])
+    return Dataset(ds)
 
 class Dataset:
     def __init__(self, ds) -> None:
         self.ds = ds
 
-    def global_mean():
-        pass
+    def global_mean(self):
+        global_avg = self.ds.spatial.average('t2m')
+        return global_avg['t2m'].values
         
 
 

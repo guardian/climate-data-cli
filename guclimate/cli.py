@@ -54,3 +54,4 @@ def anomalies():
 def inspect(path: str):
     ds = dataset.open_dataset(path)
     print('ds', ds)
+    print('global avg anomaly', ds.global_mean())
