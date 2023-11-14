@@ -16,8 +16,9 @@ class AnomalyRequest:
     product = "ecv-for-climate-change"
     format = ResultFormat.ZIP
 
-    def __init__(self, variable: str):
+    def __init__(self, variable: str, months=""):
         self.variable = variable
+        self.months = months
 
     def params(self) -> dict:
         return {
@@ -29,7 +30,7 @@ class AnomalyRequest:
                 "2022",
                 "2021",
             ],
-            "month": "10",
+            "month": self.months,
             "origin": "era5",
             "format": self.format.value,
         }

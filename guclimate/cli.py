@@ -4,7 +4,7 @@ import typer
 import inquirer
 
 from guclimate import __app_name__, __version__
-from guclimate import cds, requests, dataset, validate
+from guclimate import cds, parse_input, dataset, validate
 
 app = typer.Typer()
 
@@ -61,8 +61,8 @@ def anomalies():
     ]
     answers = inquirer.prompt(questions)
     print(f"Answers {answers}")
-    # request = requests.AnomalyRequest(answers['variable'])
-    # print(f"Request {request.variable}")
+    request = parse_input.createAnomalyRequest(answers)
+    print(f"Request {request.months}")
     # cds.retrieve(request)
 
 
