@@ -1,4 +1,4 @@
-import inquirer
+from inquirer import errors
 from collections.abc import Callable
 import re
 
@@ -7,21 +7,29 @@ def isInteger(_, current):
     try:
         int(current)
     except ValueError:
-        raise inquirer.errors.ValidationError(
-            "", reason="Please enter an integer value"
-        )
+        raise errors.ValidationError("", reason="Please enter an integer value")
 
     return True
 
 
 def isMonthRange(_, current):
+    stripped = current.strip()
+    error = errors.ValidationError("", reason=f"{current} is not a valid month range")
+
     pattern = re.compile("^[0-9]{1,2}-[0-9]{1,2}$")
-    if pattern.match(current.strip()):
-        return True
-    else:
-        raise inquirer.errors.ValidationError(
-            "", reason=f"{current} is not a valid month range"
-        )
+    if pattern.match(stripped) is None:
+        raise error
+
+    [first, last] = [int(value) for value in stripped.split("-")]
+    # check that values are between 1 and 12
+    if first < 1 or first > 12 or last < 1 or last > 12:
+        raise error
+
+    # check that last is greater than first
+    if last <= first:
+        raise error
+
+    return True
 
 
 def isCommaSeparatedIntegers(_, current):
@@ -31,7 +39,7 @@ def isCommaSeparatedIntegers(_, current):
         try:
             int(number)
         except ValueError:
-            raise inquirer.errors.ValidationError(
+            raise errors.ValidationError(
                 "Comma-separated should only contain integer values"
             )
 
@@ -44,10 +52,9 @@ def combineOR(validators: list[Callable], reason: str):
             try:
                 validator(answers, current)
                 return True
-            except inquirer.errors.ValidationError:
+            except errors.ValidationError:
                 pass
 
-        raise inquirer.errors.ValidationError("", reason=reason)
-
+        raise errors.ValidationError("", reason=reason)
 
     return validate
