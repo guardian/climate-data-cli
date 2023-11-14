@@ -16,8 +16,9 @@ class AnomalyRequest:
     product = "ecv-for-climate-change"
     format = ResultFormat.ZIP
 
-    def __init__(self, variable: str, months=""):
+    def __init__(self, variable: str, years="", months=""):
         self.variable = variable
+        self.years = years
         self.months = months
 
     def params(self) -> dict:
@@ -26,10 +27,7 @@ class AnomalyRequest:
             "product_type": "anomaly",
             "climate_reference_period": "1991_2020",
             "time_aggregation": "1_month_mean",
-            "year": [
-                "2022",
-                "2021",
-            ],
+            "year": self.years,
             "month": self.months,
             "origin": "era5",
             "format": self.format.value,

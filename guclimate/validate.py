@@ -32,6 +32,23 @@ def isMonthRange(_, current):
     return True
 
 
+def isYearRange(_, current):
+    stripped = current.strip()
+    error = errors.ValidationError("", reason=f"{current} is not a valid year range")
+
+    pattern = re.compile("^[0-9]{4}-[0-9]{4}$")
+    if pattern.match(stripped) is None:
+        raise error
+
+    [first, last] = [int(value) for value in stripped.split("-")]
+
+    # check that last is greater than first
+    if last <= first:
+        raise error
+
+    return True
+
+
 def isCommaSeparatedIntegers(_, current):
     components = current.split(",")
     numbers = [c.strip() for c in components]

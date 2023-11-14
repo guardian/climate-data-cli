@@ -10,7 +10,9 @@ if not os.path.isdir(__cache_path__):
 
 
 """Generate file name based on a UUID"""
-def uniqueFilePath() -> str:
+def uniqueFilename() -> str:
     filename = uuid.uuid4().hex
-    return os.path.join(__cache_path__, filename)
-    
+    return filename
+
+def cacheDirectory():
+    return __cache_path__

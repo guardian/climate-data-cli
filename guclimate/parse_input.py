@@ -1,29 +1,29 @@
 from guclimate import requests
-from guclimate import validate
 import re
 
 
 def createAnomalyRequest(input: dict) -> requests.AnomalyRequest:
     variable = input["variable"]
-    months = parseMonths(input["months"])
-    return requests.AnomalyRequest(variable, months=months)
+    years = parseNumeric(input["years"])
+    months = parseNumeric(input["months"])
+    return requests.AnomalyRequest(variable, years=years, months=months)
 
 
-def parseMonths(input: str):
+def parseNumeric(input: str):
     stripped = input.strip()
     month = parseInteger(stripped)
     if month:
         return month
 
-    months = parseMonthRange(stripped)
+    months = parseRange(stripped)
     if months:
         return months
-    
+
     months = parseCommaSeparatedIntegers(stripped)
     if months:
         return months
 
-    raise ValueError("Cannot create request without month parameter")
+    raise ValueError(f"Unable to parse input: {input}")
 
 
 def parseInteger(input: str):
@@ -33,8 +33,8 @@ def parseInteger(input: str):
         return None
 
 
-def parseMonthRange(input: str):
-    pattern = re.compile("^[0-9]{1,2}-[0-9]{1,2}$")
+def parseRange(input: str):
+    pattern = re.compile("^[0-9]{1,4}-[0-9]{1,4}$")
     if pattern.match(input) is None:
         return None
 
