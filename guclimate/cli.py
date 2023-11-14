@@ -4,9 +4,10 @@ import typer
 import inquirer
 
 from guclimate import __app_name__, __version__
-from guclimate import cds, requests, dataset
+from guclimate import cds, requests, dataset, validate
 
 app = typer.Typer()
+
 
 def _version_callback(value: bool) -> None:
     if value:
@@ -27,31 +28,46 @@ def main(
 ) -> None:
     return
 
+
 @app.command()
 def anomalies():
     questions = [
-    inquirer.List('variable',
-                    message="Which variable are you interested in?",
-                    choices=[("Surface air temperature", "surface_air_temperature"), ("Precipitation", "precipitation"), ("Sea-ice cover", "sea_ice_cover")],
-                ),
-    inquirer.List('aggregation',
-                    message="Aggregation type?",
-                    choices=[("Monthly means", "1_month_mean")],
-                ),
-    # inquirer.Text(name='years', 
-    #               message="Which year(s) are you interested in? Define a range (e.g. 1979-2023) or a comma-separated list of values (e.g. 2023, 2022)"),
-    # inquirer.Text(name='months', 
-    #               message="Which months(s) are you interested in? Define a range (e.g. 01-12) or a comma-separated list of values (e.g. 09,10)"),
+        inquirer.List(
+            "variable",
+            message="Which variable are you interested in?",
+            choices=[
+                ("Surface air temperature", "surface_air_temperature"),
+                ("Precipitation", "precipitation"),
+                ("Sea-ice cover", "sea_ice_cover"),
+            ],
+        ),
+        inquirer.List(
+            "aggregation",
+            message="Aggregation type?",
+            choices=[("Monthly means", "1_month_mean")],
+        ),
+        inquirer.Text(
+            name="years",
+            message="Which year(s) are you interested in? Define a range (e.g. 1979-2023) or a comma-separated list of values (e.g. 2023, 2022)",
+        ),
+        inquirer.Text(
+            name="months",
+            message="Which months(s) are you interested in? Define a range (e.g. 01-12) or a comma-separated list of values (e.g. 09,10)",
+            validate=validate.combineOR(
+                [validate.isInteger, validate.isMonthRange, validate.isCommaSeparatedIntegers],
+                "Input not valid for variable 'months'",
+            ),
+        ),
     ]
     answers = inquirer.prompt(questions)
-    # print(f"Answers {answers}")
-    request = requests.AnomalyRequest(answers['variable'])
+    print(f"Answers {answers}")
+    # request = requests.AnomalyRequest(answers['variable'])
     # print(f"Request {request.variable}")
-    cds.retrieve(request)
+    # cds.retrieve(request)
 
 
 @app.command()
 def inspect(path: str):
     ds = dataset.open_dataset(path)
-    print('ds', ds)
-    print('global avg anomaly', ds.global_mean())
+    print("ds", ds)
+    print("global avg anomaly", ds.global_mean())
