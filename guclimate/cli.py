@@ -35,7 +35,7 @@ def main(
 
 
 @app.command()
-def anomalies():
+def anomalies(output: str):
     questions = [
         inquirer.List(
             "variable",
@@ -80,7 +80,7 @@ def anomalies():
     # print(f"Answers {answers}")
     request = parse_input.createAnomalyRequest(answers)
     print(f"Sending request with parameters: {json.dumps(request.params(), indent=2)}")
-    cds.retrieve(request)
+    cds.retrieve(request, output)
 
 
 @app.command()

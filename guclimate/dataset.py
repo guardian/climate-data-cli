@@ -9,8 +9,9 @@ import xcdat
 # da_degc = da_degc.assign_attrs(da.attrs)
 # da_degc.attrs['units'] = '°C'
 
+
 def open_dataset(path):
-    ds = xcdat.open_dataset(path, engine='cfgrib')
+    ds = xcdat.open_dataset(path, engine="cfgrib")
 
     # Check if longitude is encoded as [0, 360] range instead of [-180, 180]
     # longitude = ds.coords['longitude'].values
@@ -20,15 +21,13 @@ def open_dataset(path):
 
     return Dataset(ds)
 
+
 class Dataset:
     def __init__(self, ds) -> None:
         self.ds = ds
 
     def global_mean(self):
-        global_avg = self.ds.spatial.average('t2m')
-        return global_avg['t2m'].values
-        
+        global_avg = self.ds.spatial.average("t2m")
+        return global_avg["t2m"].values
 
 
-    
-        

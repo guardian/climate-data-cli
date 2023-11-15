@@ -2,40 +2,48 @@ import cdsapi
 import shutil
 import os
 import xarray as xr
-import xcdat
-from guclimate import cache, requests
+import tempfile
+from guclimate import requests
 
 client = cdsapi.Client(quiet=True)
 
-
-def retrieve(request: requests.CDSRequest) -> cdsapi.api.Result:
-    cacheDirectory = cache.cacheDirectory()
-    filename = cache.uniqueFilename()
-    targetPath = os.path.join(cacheDirectory, f"{filename}.{request.format.value}")
-
-    client = cdsapi.Client()
-    client.retrieve(
-        request.product,
-        request.params(),
-        targetPath,
-    )
-
-    return ResultSet(cacheDirectory, filename, request.format)
+ResultFormat = requests.ResultFormat
 
 
-class ResultSet:
-    files = []
+def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result:
+    with tempfile.NamedTemporaryFile() as downloadPath:
+        client = cdsapi.Client()
+        client.retrieve(
+            request.product,
+            request.params(),
+            downloadPath.name,
+        )
 
-    def __init__(self, targetDir, filename, format: requests.ResultFormat) -> None:
-        filepath = os.path.join(targetDir, f"{filename}.{format.value}")
+        saveResults(downloadPath.name, outputPath)
 
-        if format == requests.ResultFormat.ZIP:
-            extract_dir = os.path.join(targetDir, filename)
-            shutil.unpack_archive(filepath, extract_dir)
-            extracted_files = [os.path.join(extract_dir, f) for f in os.listdir(extract_dir)]
-            self.files = sorted(extracted_files)
 
-    def save(self, path):
-        datasets = [xcdat.open_dataset(file, engine="cfgrib") for file in self.files]
+def saveResults(
+    downloadPath: str, outputPath: str, format: ResultFormat = ResultFormat.ZIP
+):
+    if format == requests.ResultFormat.ZIP:
+        extractAndSave(downloadPath, outputPath)
+
+
+def extractAndSave(downloadPath: str, outputPath: str):
+    with tempfile.TemporaryDirectory() as tempDir:
+        shutil.unpack_archive(downloadPath, tempDir, format=ResultFormat.ZIP.value)
+
+        extracted_files = [os.path.join(tempDir, file) for file in os.listdir(tempDir)]
+        sorted_files = sorted(extracted_files)
+
+        # save individual files for debugging
+        # for file in sorted_files:
+        #     outputDir = os.path.dirname(outputPath)
+        #     fileName = os.path.basename(file)
+        #     path = os.path.join(outputDir, fileName)
+        #     shutil.copyfile(file, path)
+
+        datasets = [xr.open_dataset(file, engine="cfgrib") for file in sorted_files]
+
         concatenated = xr.concat(datasets, dim="time")
-        concatenated.to_netcdf(path)
+        concatenated.to_netcdf(outputPath)
