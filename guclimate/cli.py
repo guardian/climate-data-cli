@@ -4,14 +4,11 @@ from typing_extensions import Annotated
 import typer
 import inquirer
 import json
-import pprint
 
 from guclimate import __app_name__, __version__
 from guclimate import cds, parse_input, dataset, validate, requests
 
 app = typer.Typer()
-
-pp = pprint.PrettyPrinter(indent=2)
 
 
 def _version_callback(value: bool) -> None:
@@ -86,16 +83,4 @@ def anomalies(output: str):
 @app.command()
 def inspect(path: str):
     ds = dataset.open_dataset(path)
-    print("ds", ds)
-    print("global avg anomaly", ds.global_mean())
-
-
-@app.command()
-def store(
-    inputdir: str,
-    input_name: str,
-    output: str,
-):
-    result = cds.ResultSet(inputdir, input_name, requests.ResultFormat.ZIP)
-    pp.pprint(result.files)
-    result.save(output)
+    ds.inspect()

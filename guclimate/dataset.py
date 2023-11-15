@@ -1,5 +1,7 @@
-import xarray as xr
 import xcdat
+import pprint
+
+pp = pprint.PrettyPrinter(indent=2)
 
 # Convert temperature units from Kelvin to Celsius
 # Temperature anomalies should not be converted, because relative temperatures are the same in Kelvin and Celsius
@@ -11,7 +13,7 @@ import xcdat
 
 
 def open_dataset(path):
-    ds = xcdat.open_dataset(path, engine="cfgrib")
+    ds = xcdat.open_dataset(path)
 
     # Check if longitude is encoded as [0, 360] range instead of [-180, 180]
     # longitude = ds.coords['longitude'].values
@@ -30,4 +32,5 @@ class Dataset:
         global_avg = self.ds.spatial.average("t2m")
         return global_avg["t2m"].values
 
-
+    def inspect(self):
+        pp.pprint(self.ds)
