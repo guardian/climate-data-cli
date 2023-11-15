@@ -13,6 +13,7 @@ def validatePath(path: str):
     outputDir = os.path.dirname(path)
     if not os.path.exists(outputDir):
         raise typer.BadParameter(f"Output directory '{outputDir}' does not exist")
+    return path
 
 
 @app.command(help="Anomaly data from the 'ecv-for-climate-change' dataset")

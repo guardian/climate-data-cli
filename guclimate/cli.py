@@ -1,4 +1,4 @@
-from . import __app_name__, __version__, retrieve
+from . import __app_name__, __version__, retrieve, process
 from .core import dataset
 from typing import Optional
 
@@ -6,7 +6,7 @@ import typer
 
 app = typer.Typer()
 app.add_typer(retrieve.app, name="retrieve")
-
+app.add_typer(process.app, name="process")
 
 def _version_callback(value: bool) -> None:
     if value:
