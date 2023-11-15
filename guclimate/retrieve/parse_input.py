@@ -1,4 +1,4 @@
-from guclimate import requests
+from guclimate.retrieve import requests
 import re
 
 

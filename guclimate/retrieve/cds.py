@@ -3,7 +3,7 @@ import shutil
 import os
 import xarray as xr
 import tempfile
-from guclimate import requests
+from guclimate.retrieve import requests
 
 client = cdsapi.Client(quiet=True)
 

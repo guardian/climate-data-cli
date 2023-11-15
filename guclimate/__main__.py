@@ -1,6 +1,6 @@
 """guclimate entry point script."""
 
-from guclimate import cli, __app_name__
+from . import cli, __app_name__
 
 def main():
     cli.app(prog_name=__app_name__)
