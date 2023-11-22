@@ -2,11 +2,11 @@ from guclimate.retrieve import requests
 import re
 
 
-def createAnomalyRequest(input: dict) -> requests.AnomalyRequest:
+def createAnomalyRequest(productType: str, input: dict) -> requests.AnomalyRequest:
     variable = input["variable"]
     years = parseNumeric(input["years"])
     months = parseNumeric(input["months"])
-    return requests.AnomalyRequest(variable, years=years, months=months)
+    return requests.AnomalyRequest(productType, variable, years=years, months=months)
 
 
 def parseNumeric(input: str):
