@@ -4,9 +4,16 @@ import re
 
 def createAnomalyRequest(productType: str, input: dict) -> requests.AnomalyRequest:
     variable = input["variable"]
+    timeAggregation = input["aggregation"]
     years = parseNumeric(input["years"])
     months = parseNumeric(input["months"])
-    return requests.AnomalyRequest(productType, variable, years=years, months=months)
+    return requests.AnomalyRequest(
+        productType,
+        variable,
+        timeAggregation=timeAggregation,
+        years=years,
+        months=months,
+    )
 
 
 def parseNumeric(input: str):

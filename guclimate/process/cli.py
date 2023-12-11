@@ -3,7 +3,6 @@ from pathlib import Path
 from guclimate.core import dataset
 import typer
 import os
-import pandas
 
 app = typer.Typer(help="Retrieve data from the Copernicus Climate Data Store (CDS)")
 

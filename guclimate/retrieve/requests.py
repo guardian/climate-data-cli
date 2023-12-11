@@ -20,9 +20,10 @@ class AnomalyRequest:
     product = "ecv-for-climate-change"
     format = ResultFormat.ZIP
 
-    def __init__(self, productType: str, variable: str, years="", months=""):
+    def __init__(self, productType: str, variable: str, timeAggregation="1_month_mean", years="", months=""):
         self.productType = productType
         self.variable = variable
+        self.timeAggregation = timeAggregation
         self.years = years
         self.months = months
 
@@ -31,7 +32,7 @@ class AnomalyRequest:
             "variable": self.variable,
             "product_type": self.productType,
             "climate_reference_period": "1991_2020",
-            "time_aggregation": "1_month_mean",
+            "time_aggregation": self.timeAggregation,
             "year": self.years,
             "month": self.months,
             "origin": "era5",

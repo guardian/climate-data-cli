@@ -38,7 +38,10 @@ def anomalies(
         inquirer.List(
             "aggregation",
             message="Aggregation type?",
-            choices=[("Monthly means", "1_month_mean")],
+            choices=[
+                ("Monthly means", "1_month_mean"),
+                ("12 month running mean", "12_month_running_mean"),
+            ],
         ),
         inquirer.Text(
             name="years",
@@ -67,7 +70,7 @@ def anomalies(
     ]
     answers = inquirer.prompt(questions)
     # print(f"Answers {answers}")
-    request = parse_input.createAnomalyRequest("anomalies", answers)
+    request = parse_input.createAnomalyRequest("anomaly", answers)
     print(f"Sending request with parameters: {json.dumps(request.params(), indent=2)}")
     cds.retrieve(request, output)
 
