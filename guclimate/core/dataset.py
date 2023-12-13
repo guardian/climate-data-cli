@@ -15,13 +15,8 @@ pp = pprint.PrettyPrinter(indent=2)
 
 
 def open_dataset(path):
-    ds = xcdat.open_dataset(path)
-
-    # Check if longitude is encoded as [0, 360] range instead of [-180, 180]
-    # longitude = ds.coords['longitude'].values
-    # if max(longitude) > 180:
-    #     # Convert longitude to [-180, 180] range
-    #     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180)).sortby('longitude')
+    # Open file and ensure longitude is encoded as [-180, 180] range instead of [0, 360]
+    ds = xcdat.open_dataset(path, lon_orient=(-180, 180))
 
     return Dataset(ds)
 
@@ -33,12 +28,12 @@ class Dataset:
     def global_mean(self, variable: str):
         global_avg = self.ds.spatial.average(variable)
         return Dataset(global_avg)
-    
+
     def timeseries(self, variable: str) -> pandas.DataFrame:
-        dr = xr.DataArray(self.ds[variable], coords=[self.ds.coords['time']], dims=["time"])
+        dr = xr.DataArray(
+            self.ds[variable], coords=[self.ds.coords["time"]], dims=["time"]
+        )
         return dr.to_dataframe()
 
     def inspect(self):
         pp.pprint(self.ds)
-
-    
