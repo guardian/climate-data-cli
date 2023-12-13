@@ -20,7 +20,14 @@ class AnomalyRequest:
     product = "ecv-for-climate-change"
     format = ResultFormat.ZIP
 
-    def __init__(self, productType: str, variable: str, timeAggregation="1_month_mean", years="", months=""):
+    def __init__(
+        self,
+        productType: str,
+        variable: str,
+        timeAggregation="1_month_mean",
+        years="",
+        months="",
+    ):
         self.productType = productType
         self.variable = variable
         self.timeAggregation = timeAggregation
