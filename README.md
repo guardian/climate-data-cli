@@ -14,6 +14,19 @@ The easiest way to install miniforge on MacOS is using Homebrew: `brew install m
 
 ## Development
 
+### Installing the module for local development
+
+Install the guclimate CLI from source:
+1. Make sure you're in the project directory
+2. Run `pip install -e .`
+
+You should now be able to run the tool. Try:
+```
+guclimate --help
+```
+
+### Adding a non-Python dependency
+
 * To add a new dependency, add it to environment.yml and run the following command in the project directory:
 
 ```
