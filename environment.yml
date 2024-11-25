@@ -6,7 +6,6 @@ dependencies:
   - pip
   - numpy
   - pandas
-  - cdsapi
   - cfgrib
   - xarray
   - dask
