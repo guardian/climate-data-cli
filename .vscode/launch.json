@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Python: CLI anomalies",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "guclimate",
             "args" : ["anomalies"],
