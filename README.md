@@ -32,3 +32,9 @@ guclimate --help
 ```
 conda env update --file environment.yml --prune
 ```
+
+### Running tests
+
+```
+python -m run_tests
+```
