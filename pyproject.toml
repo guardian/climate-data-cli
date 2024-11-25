@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "guclimate"
+version = "0.0.1"
+authors = [
+  { name="Niels de Hoog", email="njdehoog@gmail.com" },
+]
+description = "A package for retrieving and processing climate data from the Copernicus Climate Change Service (C3S)"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+guclimate = "guclimate.cli:app"
