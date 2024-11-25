@@ -8,8 +8,8 @@ The easiest way to install miniforge on MacOS is using Homebrew: `brew install m
 
 1. Clone this repo
 2. Navigate to the project directory using the command line prompt
-3. Run `mamba env create -p ./.env --file ./environment.yml` to install dependencies in a virtual environment
-4. Activate the virtual environment: `conda activate ./.env`
+3. Run `conda env create --file ./environment.yml` to install dependencies in a virtual environment
+4. Activate the virtual environment: `conda activate climate-data`
 5. Install Python packages `python -m pip install -r requirements.txt`
 
 ## Development
@@ -17,5 +17,5 @@ The easiest way to install miniforge on MacOS is using Homebrew: `brew install m
 * To add a new dependency, add it to environment.yml and run the following command in the project directory:
 
 ```
-mamba env update --file ./environment.yml -p ./.env --prune
+conda env update --file environment.yml --prune
 ```
