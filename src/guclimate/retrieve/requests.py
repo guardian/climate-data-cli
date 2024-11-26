@@ -16,7 +16,7 @@ class CDSRequest(Protocol):
         """Request parameters"""
 
 
-class AnomalyRequest:
+class ECVRequest:
     product = "ecv-for-climate-change"
     format = ResultFormat.ZIP
 

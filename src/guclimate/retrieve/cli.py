@@ -70,7 +70,7 @@ def anomalies(
     ]
     answers = inquirer.prompt(questions)
     # print(f"Answers {answers}")
-    request = parse_input.createAnomalyRequest("anomaly", answers)
+    request = parse_input.createECVRequest("anomaly", answers)
     print(f"Sending request with parameters: {json.dumps(request.params(), indent=2)}")
     cds.retrieve(request, output)
 
@@ -127,6 +127,6 @@ def monthlymeans(
     ]
     answers = inquirer.prompt(questions)
     # print(f"Answers {answers}")
-    request = parse_input.createAnomalyRequest("monthly_mean", answers)
+    request = parse_input.createECVRequest("monthly_mean", answers)
     print(f"Sending request with parameters: {json.dumps(request.params(), indent=2)}")
     cds.retrieve(request, output)

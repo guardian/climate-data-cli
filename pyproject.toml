@@ -19,3 +19,14 @@ classifiers = [
 
 [project.scripts]
 guclimate = "guclimate.cli:app"
+
+# Pytest config
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-v"
+testpaths = [
+    "tests",
+]
+python_files = [
+    "test_*.py",
+]

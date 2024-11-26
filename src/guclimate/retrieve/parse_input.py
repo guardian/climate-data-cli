@@ -2,12 +2,12 @@ from guclimate.retrieve import requests
 import re
 
 
-def createAnomalyRequest(productType: str, input: dict) -> requests.AnomalyRequest:
+def createECVRequest(productType: str, input: dict) -> requests.ECVRequest:
     variable = input["variable"]
     timeAggregation = input["aggregation"]
     years = parseNumeric(input["years"])
     months = parseNumeric(input["months"])
-    return requests.AnomalyRequest(
+    return requests.ECVRequest(
         productType,
         variable,
         timeAggregation=timeAggregation,
