@@ -1,19 +1,53 @@
-from . import validate, parse_input, cds
-from typing_extensions import Annotated
-from pathlib import Path
 import typer
 import inquirer
 import json
 import os
+from . import validate, parse_input, cds
+from typing_extensions import Annotated
+from pathlib import Path
+from tabulate import tabulate
 
 app = typer.Typer(help="Retrieve data from the Copernicus Climate Data Store (CDS)")
-
 
 def validatePath(path: str):
     outputDir = os.path.dirname(path)
     if not os.path.exists(outputDir):
         raise typer.BadParameter(f"Output directory '{outputDir}' does not exist")
     return path
+
+
+@app.command(help="List available datasets from the Climate Data Store (CDS)")
+def list():
+    datasets = [[key, cds.datasets[key]] for key in cds.datasets]
+    print(tabulate(datasets, headers=["Name", "Identifier"]), end="\n\n")
+
+@app.command(help="Retrieve dataset from the Climate Data Store (CDS)")
+def dataset(
+    identifier: Annotated[
+        str,
+        typer.Argument(help="The dataset identifier"),
+    ],
+    output: Annotated[
+        Path,
+        typer.Argument(
+            help="Where to store the data, e.g. (./output.nc)", callback=validatePath
+        ),
+    ],
+):
+    questions = [
+        inquirer.List(
+            "dataset",
+            message="Which dataset are you interested in?",
+            choices=[
+                ("ECV for climate change", "ecv-for-climate-change"),
+                ("ERA5", "reanalysis-era5-single-levels"),
+                ("ERA5 Land", "reanalysis-era5-land"),
+                ("ERA5 Pressure Levels", "reanalysis-era5-pressure-levels"),
+            ],
+        ),
+    ]
+    answers = inquirer.prompt(questions)
+    print(f"Answers {answers}")
 
 
 @app.command(help="Anomaly data from the 'ecv-for-climate-change' dataset")

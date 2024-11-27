@@ -7,6 +7,11 @@ from guclimate.retrieve import requests
 
 ResultFormat = requests.ResultFormat
 
+datasets = {
+    "Essential Climate Variables (ECV) for climate change": "ecv-for-climate-change",
+    "ERA5 reanalysis (single levels)": "reanalysis-era5-single-levels",
+}
+
 def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result:
     with tempfile.NamedTemporaryFile() as downloadPath:
         client = cdsapi.Client()
