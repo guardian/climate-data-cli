@@ -30,3 +30,8 @@ testpaths = [
 python_files = [
     "test_*.py",
 ]
+norecursedirs = [
+    ".git",
+    "output",
+    "__pychache__"
+]
