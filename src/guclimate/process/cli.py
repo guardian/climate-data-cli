@@ -4,7 +4,7 @@ from guclimate.core import dataset
 import typer
 import os
 
-app = typer.Typer(help="Retrieve data from the Copernicus Climate Data Store (CDS)")
+app = typer.Typer(help="Process data from the Copernicus Climate Data Store (CDS)")
 
 
 def validateInputPath(path: str):
