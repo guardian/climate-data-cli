@@ -5,10 +5,7 @@ import xarray as xr
 import tempfile
 from guclimate.retrieve import requests
 
-client = cdsapi.Client(quiet=True)
-
 ResultFormat = requests.ResultFormat
-
 
 def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result:
     with tempfile.NamedTemporaryFile() as downloadPath:
