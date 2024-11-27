@@ -24,24 +24,31 @@ class ECVRequest:
         self,
         productType: str,
         variable: str,
+        origin="era5",
+        climateReferencePeriod="1991_2020",
         timeAggregation="1_month_mean",
         years="",
         months="",
     ):
         self.productType = productType
         self.variable = variable
+        self.origin = origin
+        self.climateReferencePeriod = climateReferencePeriod
         self.timeAggregation = timeAggregation
         self.years = years
         self.months = months
 
     def params(self) -> dict:
-        return {
+        params = {
             "variable": self.variable,
             "product_type": self.productType,
-            "climate_reference_period": "1991_2020",
             "time_aggregation": self.timeAggregation,
             "year": self.years,
             "month": self.months,
-            "origin": "era5",
-            "format": self.format.value,
+            "origin": self.origin,
         }
+
+        if self.productType == "anomaly":
+            params["climate_reference_period"] = self.climateReferencePeriod
+
+        return params

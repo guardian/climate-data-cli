@@ -41,7 +41,7 @@ request_inputs = [
     'product_type': 'monthly_mean',
     'origin': 'era5',
     'time_aggregation': '1_month_mean',
-    'year': '2022',
+    'year': '2024',
     'month': ['01', '02', '03'], 
   })
 ]
@@ -49,5 +49,4 @@ request_inputs = [
 @pytest.mark.parametrize("product_type, user_input, expected", request_inputs)
 def test_create_ecv_request(product_type, user_input, expected):
   request = createECVRequest(product_type, user_input)
-  print(request.params())
   assert request.params() == expected
