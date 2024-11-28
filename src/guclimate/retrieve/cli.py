@@ -16,9 +16,9 @@ def validatePath(path: str):
     return path
 
 
-@app.command(help="List available datasets from the Climate Data Store (CDS)")
+@app.command(help="List available products from the Climate Data Store (CDS)")
 def list():
-    datasets = [[key, cds.datasets[key]] for key in cds.datasets]
+    datasets = [[key, cds.products[key]] for key in cds.products]
     print(tabulate(datasets, headers=["Name", "Identifier"]), end="\n\n")
 
 @app.command(help="Retrieve dataset from the Climate Data Store (CDS)")
@@ -27,28 +27,10 @@ def dataset(
         str,
         typer.Argument(help="The dataset identifier"),
     ],
-    output: Annotated[
-        Path,
-        typer.Argument(
-            help="Where to store the data, e.g. (./output.nc)", callback=validatePath
-        ),
-    ],
+    variable: Annotated[str, typer.Option(help="The variable in the dataset")] = ""
 ):
-    questions = [
-        inquirer.List(
-            "dataset",
-            message="Which dataset are you interested in?",
-            choices=[
-                ("ECV for climate change", "ecv-for-climate-change"),
-                ("ERA5", "reanalysis-era5-single-levels"),
-                ("ERA5 Land", "reanalysis-era5-land"),
-                ("ERA5 Pressure Levels", "reanalysis-era5-pressure-levels"),
-            ],
-        ),
-    ]
-    answers = inquirer.prompt(questions)
-    print(f"Answers {answers}")
-
+    print(f"Retrieving dataset '{identifier}'")
+    print(f"Variable: {variable}")
 
 @app.command(help="Anomaly data from the 'ecv-for-climate-change' dataset")
 def anomalies(

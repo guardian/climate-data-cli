@@ -7,7 +7,7 @@ from guclimate.retrieve import requests
 
 ResultFormat = requests.ResultFormat
 
-datasets = {
+products = {
     "Essential Climate Variables (ECV) for climate change": "ecv-for-climate-change",
     "ERA5 reanalysis (single levels)": "reanalysis-era5-single-levels",
 }
