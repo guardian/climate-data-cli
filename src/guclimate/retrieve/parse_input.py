@@ -1,20 +1,17 @@
-from guclimate.retrieve import requests
+from guclimate.retrieve.requests import CDSRequest, ResultFormat
 import re
 
+numericKeys = ["year", "years", "month", "months"]
 
-def createECVRequest(productType: str, input: dict) -> requests.ECVRequest:
-    variable = input["variable"]
-    timeAggregation = input["aggregation"]
-    years = parseNumeric(input["years"])
-    months = parseNumeric(input["months"])
-    return requests.ECVRequest(
-        productType,
-        variable,
-        timeAggregation=timeAggregation,
-        years=years,
-        months=months,
-    )
+def createCDSRequest(config: dict) -> CDSRequest:
+    if "product" not in config:
+        raise ValueError("Missing product for request")
 
+    product = config["product"]
+    numericParams = {key: parseNumeric(config[key]) for key in numericKeys if key in config}
+    otherParams = {key: config[key] for key in config if key not in numericKeys and key not in ["product"]}
+    params = numericParams | otherParams
+    return CDSRequest(product, params)
 
 def parseNumeric(input: str):
     stripped = input.strip()

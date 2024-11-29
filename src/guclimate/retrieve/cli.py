@@ -18,19 +18,23 @@ def validatePath(path: str):
 
 @app.command(help="List available products from the Climate Data Store (CDS)")
 def list():
-    datasets = [[key, cds.products[key]] for key in cds.products]
-    print(tabulate(datasets, headers=["Name", "Identifier"]), end="\n\n")
+    products = [[key, cds.products[key]] for key in cds.products]
+    print(tabulate(products, headers=["Name", "Identifier"]), end="\n\n")
+
 
 @app.command(help="Retrieve dataset from the Climate Data Store (CDS)")
-def dataset(
+def product(
     identifier: Annotated[
         str,
-        typer.Argument(help="The dataset identifier"),
+        typer.Argument(help="The product identifier"),
     ],
-    variable: Annotated[str, typer.Option(help="The variable in the dataset")] = ""
+    productType: Annotated[str, typer.Option(help="The product type")] = "",
+    variable: Annotated[str, typer.Option(help="The variable in the dataset")] = "",
 ):
     print(f"Retrieving dataset '{identifier}'")
+    print(f"Product type: '{productType}'")
     print(f"Variable: {variable}")
+
 
 @app.command(help="Anomaly data from the 'ecv-for-climate-change' dataset")
 def anomalies(
