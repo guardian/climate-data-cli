@@ -5,7 +5,6 @@ import typer
 import yaml
 import os
 
-
 app = typer.Typer(help="Create and run recipes for common tasks")
 
 def validateInputPath(path: str):

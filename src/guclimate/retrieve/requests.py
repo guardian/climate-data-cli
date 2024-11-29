@@ -1,4 +1,3 @@
-from typing import Protocol
 from enum import Enum
 
 class ResultFormat(str, Enum):
