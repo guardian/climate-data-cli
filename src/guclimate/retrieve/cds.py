@@ -17,7 +17,7 @@ def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result
         client = cdsapi.Client()
         client.retrieve(
             request.product,
-            request.params(),
+            request.params,
             downloadPath.name,
         )
 

@@ -4,6 +4,9 @@ from tabulate import tabulate
 import typer
 import yaml
 import os
+from guclimate.retrieve import cds
+from guclimate.retrieve.parse_input import createCDSRequest
+
 
 app = typer.Typer(help="Create and run recipes for common tasks")
 
@@ -31,13 +34,22 @@ def inspect(
         print("----------------------------")
 
 
-@app.command(help="Execute a given recipe")
-def cook(
+@app.command(help="Run a given recipe")
+def run(
     path: Annotated[
         Path,
         typer.Argument(
             help="Path to recipe file, e.g. ./my_recipe.yaml",
             callback=validateInputPath,
+        ),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option(
+            "--output", 
+            "-o",
+            prompt="Where do you want store the data, e.g. (./output/monthly-means.nc)",
+            help="Where to store the data, e.g. (./anomalies.nc)",
         ),
     ]
 ):
@@ -45,6 +57,8 @@ def cook(
         recipe = yaml.safe_load(file)
         retrievals = [key for key in recipe["retrieve"]]
         for key in retrievals:
-            request = recipe["retrieve"][key]
-            print(f"Request {request}")
-
+            retrieval = recipe["retrieve"][key]
+            request = createCDSRequest(retrieval)
+            print(f"Request {request.params}")
+            cds.retrieve(request, output)
+            print("----------------------------")

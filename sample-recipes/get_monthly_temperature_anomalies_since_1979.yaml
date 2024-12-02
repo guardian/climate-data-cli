@@ -1,0 +1,15 @@
+---
+name: "Monthly mean temperatures"
+description: "Get monthly mean temp from 1940 to 2024"
+retrieve:
+  monthly_mean_temp:
+    product: ecv-for-climate-change
+    product_type: anomaly
+    variable: surface_air_temperature
+    time_aggregation: 1_month_mean
+    climate_reference_period: "1991_2020"
+    origin: "era5"
+    year: 1979-2024
+    month: 1-12
+    
+
