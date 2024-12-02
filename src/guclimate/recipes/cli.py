@@ -6,7 +6,7 @@ import yaml
 import os
 from guclimate.retrieve import cds
 from guclimate.retrieve.parse_input import createCDSRequest
-
+from guclimate.core import dataset
 
 app = typer.Typer(help="Create and run recipes for common tasks")
 
@@ -42,23 +42,51 @@ def run(
             help="Path to recipe file, e.g. ./my_recipe.yaml",
             callback=validateInputPath,
         ),
-    ],
-    output: Annotated[
-        Path,
-        typer.Option(
-            "--output", 
-            "-o",
-            prompt="Where do you want store the data, e.g. (./output/monthly-means.nc)",
-            help="Where to store the data, e.g. (./anomalies.nc)",
-        ),
     ]
 ):
     with open(path, 'r') as file:
         recipe = yaml.safe_load(file)
         retrievals = [key for key in recipe["retrieve"]]
+        data = {}
         for key in retrievals:
             retrieval = recipe["retrieve"][key]
+            output = retrieval["output"]
+
+            print("----------------------------")
+            print(f"Retrieving '{key}'")
+
+            if Path(output).is_file():
+                print(f"Output file exists: {output}")
+                print(f"Skipping retrieval")
+                data[key] = output
+                print("----------------------------")
+                continue
+
             request = createCDSRequest(retrieval)
             print(f"Request {request.params}")
             cds.retrieve(request, output)
+            data[key] = output
+            print("----------------------------")
+
+        processing = [key for key in recipe["process"]]
+        for key in processing:
+            step = recipe["process"][key]
+            print(f"Processing '{key}'")
+            input = step["data"]
+            if data[input] is None:
+                raise ValueError(f"Input data for '{key}' is not available")
+
+            variable = step["variable"]
+            if variable is None:
+                raise ValueError(f"Variable for '{key}' is not specified")
+
+            output = step["output"]
+            if output is None:
+                raise ValueError(f"Output for '{key}' is not specified")
+
+            ds = dataset.open_dataset(data[input])
+            ds = ds.global_mean(variable)
+            df = ds.timeseries(variable)
+            df.to_excel(output)
+
             print("----------------------------")

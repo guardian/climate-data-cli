@@ -26,14 +26,14 @@ def timeseries(
         str,
         typer.Argument(help="Variable name"),
     ],
-    outdir: Annotated[
+    output: Annotated[
         Path,
         typer.Argument(
-            help="Output directory",
+            help="Output path",
         ),
-    ] = "./",
+    ] = "./timeseries.xlsx",
 ):
     ds = dataset.open_dataset(input)
     ds = ds.global_mean(variable)
     df = ds.timeseries(variable)
-    df.to_excel(os.path.join(outdir, "timeseries.xlsx"))
+    df.to_excel(output)

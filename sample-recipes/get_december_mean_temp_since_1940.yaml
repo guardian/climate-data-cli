@@ -1,0 +1,14 @@
+---
+name: "December mean temperatures"
+description: "Get monthly mean temp from 1940 to 2024"
+retrieve:
+  monthly_mean_temp:
+    product: reanalysis-era5-single-levels-monthly-means
+    product_type: monthly_averaged_reanalysis
+    variable: 2m_temperature
+    year: 1940-2023
+    month: 12
+    time: 00:00
+    data_format: grib
+    download_format: zip
+

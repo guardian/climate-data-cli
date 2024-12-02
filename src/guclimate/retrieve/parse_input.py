@@ -1,4 +1,4 @@
-from guclimate.retrieve.requests import CDSRequest, ResultFormat
+from guclimate.retrieve.requests import CDSRequest
 import re
 
 numericKeys = ["year", "years", "month", "months"]
@@ -9,7 +9,7 @@ def createCDSRequest(config: dict) -> CDSRequest:
 
     product = config["product"]
     numericParams = {key: parseNumeric(config[key]) for key in numericKeys if key in config}
-    otherParams = {key: config[key] for key in config if key not in numericKeys and key not in ["product"]}
+    otherParams = {key: config[key] for key in config if key not in numericKeys and key not in ["product", "output"]}
     params = numericParams | otherParams
     return CDSRequest(product, params)
 
