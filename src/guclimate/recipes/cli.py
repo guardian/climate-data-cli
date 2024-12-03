@@ -5,8 +5,7 @@ import typer
 import yaml
 import os
 from guclimate.retrieve import cds
-from guclimate.retrieve.parse_input import createCDSRequest
-from guclimate.core import dataset
+from guclimate.core import dataset, requests
 
 app = typer.Typer(help="Create and run recipes for common tasks")
 
@@ -55,6 +54,9 @@ def run(
             print("----------------------------")
             print(f"Retrieving '{key}'")
 
+            request = requests.createCDSRequest(retrieval)
+            # print(f"Request {request.params}")
+
             if Path(output).is_file():
                 print(f"Output file exists: {output}")
                 print(f"Skipping retrieval")
@@ -62,11 +64,15 @@ def run(
                 print("----------------------------")
                 continue
 
-            request = createCDSRequest(retrieval)
+            request = requests.createCDSRequest(retrieval)
             print(f"Request {request.params}")
             cds.retrieve(request, output)
             data[key] = output
             print("----------------------------")
+
+        if "process" not in recipe:
+            print("No processing steps specified")
+            return
 
         processing = [key for key in recipe["process"]]
         for key in processing:

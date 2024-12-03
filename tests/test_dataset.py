@@ -1,4 +1,4 @@
-from src.guclimate.core import dataset
+from guclimate.core import dataset
 
 # def test_open_file():
 #     ds = dataset.open_dataset(

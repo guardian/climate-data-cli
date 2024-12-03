@@ -3,9 +3,7 @@ import shutil
 import os
 import xarray as xr
 import tempfile
-from guclimate.retrieve import requests
-
-ResultFormat = requests.ResultFormat
+from guclimate.core import requests
 
 products = {
     "Essential Climate Variables (ECV) for climate change": "ecv-for-climate-change",
@@ -25,7 +23,7 @@ def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result
 
 
 def saveResults(
-    downloadPath: str, outputPath: str, format: ResultFormat = ResultFormat.ZIP
+    downloadPath: str, outputPath: str, format: requests.ResultFormat = requests.ResultFormat.ZIP
 ):
     if format == requests.ResultFormat.ZIP:
         extractAndSave(downloadPath, outputPath)
@@ -33,7 +31,7 @@ def saveResults(
 
 def extractAndSave(downloadPath: str, outputPath: str):
     with tempfile.TemporaryDirectory() as tempDir:
-        shutil.unpack_archive(downloadPath, tempDir, format=ResultFormat.ZIP.value)
+        shutil.unpack_archive(downloadPath, tempDir, format=requests.ResultFormat.ZIP.value)
 
         extracted_files = [os.path.join(tempDir, file) for file in os.listdir(tempDir)]
         sorted_files = sorted(extracted_files)
