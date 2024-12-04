@@ -15,11 +15,27 @@ def validatePath(path: str):
         raise typer.BadParameter(f"Output directory '{outputDir}' does not exist")
     return path
 
+@app.command(help="Verify CDS credentials")
+def verify():
+    print("Verifying CDS credentials")
+    response = cds.verify()
+    print("Credentials verified", response)
+
 
 @app.command(help="List available products from the Climate Data Store (CDS)")
 def list():
-    products = [[key, cds.products[key]] for key in cds.products]
-    print(tabulate(products, headers=["Name", "Identifier"]), end="\n\n")
+    products = cds.getProducts()
+    productList = [[product["title"], product["id"]] for product in products]
+    # products = [[key, cds.products[key]] for key in cds.products]
+    print(
+        tabulate(
+            productList,
+            headers=["Name", "Identifier"],
+            tablefmt="simple_grid",
+            maxcolwidths=[50, None],
+        ),
+        end="\n\n",
+    )
 
 
 @app.command(help="Retrieve dataset from the Climate Data Store (CDS)")

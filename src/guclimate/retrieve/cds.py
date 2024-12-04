@@ -3,12 +3,26 @@ import shutil
 import os
 import xarray as xr
 import tempfile
+import logging
+from datapi import ApiClient
 from guclimate.core import requests
+
+logging.basicConfig(level="ERROR")
 
 products = {
     "Essential Climate Variables (ECV) for climate change": "ecv-for-climate-change",
     "ERA5 reanalysis (single levels)": "reanalysis-era5-single-levels",
 }
+
+def getProducts():
+    client = ApiClient()
+    collections = client.get_collections()
+    return collections.json["collections"]
+
+def verify():
+    client = ApiClient()
+    response = client.check_authentication()
+    return response
 
 def retrieve(request: requests.CDSRequest, outputPath: str) -> cdsapi.api.Result:
     with tempfile.NamedTemporaryFile() as downloadPath:
