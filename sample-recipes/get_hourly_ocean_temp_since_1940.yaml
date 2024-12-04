@@ -7,9 +7,9 @@ retrieve:
     product_type: reanalysis
     variable: sea_surface_temperature
     year: 1940-2024
-    month: 1-12
-    day: 1-31
-    time: 00:00-23:00
+    month: 12
+    day: 3
+    time: "12:00"
     data_format: grib
-    download_format: unarchived
-    output: "./output/sea-temperature/sea_surface_temp_hourly_1940_2024.nc"
+    download_format: zip
+    output: "./output/sea-temperature/sea_surface_temp_hourly_1940_2024"

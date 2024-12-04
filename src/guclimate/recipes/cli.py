@@ -4,6 +4,7 @@ from tabulate import tabulate
 import typer
 import yaml
 import os
+from functools import reduce
 from guclimate.retrieve import cds
 from guclimate.core import dataset, requests
 
@@ -54,7 +55,7 @@ def run(
             print("----------------------------")
             print(f"Retrieving '{key}'")
 
-            request = requests.createCDSRequest(retrieval)
+            requestByYear = requests.createCDSRequest(retrieval)
             # print(f"Request {request.params}")
 
             if Path(output).is_file():
@@ -64,11 +65,24 @@ def run(
                 print("----------------------------")
                 continue
 
-            request = requests.createCDSRequest(retrieval)
-            print(f"Request {request.params}")
-            cds.retrieve(request, output)
-            data[key] = output
-            print("----------------------------")
+            originalRequest = requests.createCDSRequest(retrieval)
+            allRequests = [
+                requestByDay
+                for requestByYear in originalRequest.splitByYear()
+                for requestByMonth in requestByYear.splitByMonth()
+                for requestByDay in requestByMonth.splitByDay()
+            ]
+            print(f"Number of requests: {len(allRequests)}")
+            for request in allRequests:
+                print(
+                    f"Request for days {request.getDays()}, months {request.getMonths()}, years {request.getYears()}"
+                )
+                filename = f"data_{request.getYears()[0]}_{request.getMonths()[0]}_{request.getDays()[0]}.grib"
+                target = Path(output) / filename
+                print(f"Output: {target}")
+                cds.retrieve(requestByYear, target)
+                # data[key] = output
+                print("----------------------------")
 
         if "process" not in recipe:
             print("No processing steps specified")
