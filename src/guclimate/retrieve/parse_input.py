@@ -5,7 +5,10 @@ import re
 # INTEGER INPUT #
 #################
 
-def parseNumeric(input: str):
+def parseNumeric(input: str | int):
+    if isinstance(input, int):
+        return [str(input).zfill(2)]
+
     stripped = input.strip()
     value = parseInteger(stripped)
     if value:

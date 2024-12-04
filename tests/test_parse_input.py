@@ -2,6 +2,7 @@ import pytest
 from guclimate.retrieve.parse_input import parseNumeric, parseTime
 
 numeric_inputs = [
+    (1, ["01"]),
     ("1", ["01"]),
     ("1, 10", ["01", "10"]),
     ("1, 2", ["01", "02"]),
