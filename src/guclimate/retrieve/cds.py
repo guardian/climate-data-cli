@@ -14,10 +14,12 @@ products = {
     "ERA5 reanalysis (single levels)": "reanalysis-era5-single-levels",
 }
 
-def getProducts():
+
+def getProducts(query = None):
     client = ApiClient()
-    collections = client.get_collections()
+    collections = client.get_collections(query=query)
     return collections.json["collections"]
+
 
 def verify():
     client = ApiClient()

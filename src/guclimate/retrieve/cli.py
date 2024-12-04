@@ -23,10 +23,11 @@ def verify():
 
 
 @app.command(help="List available products from the Climate Data Store (CDS)")
-def list():
-    products = cds.getProducts()
+def list(
+    query: Annotated[str, typer.Option(help="Full-text search query")] = None,
+):
+    products = cds.getProducts(query)
     productList = [[product["title"], product["id"]] for product in products]
-    # products = [[key, cds.products[key]] for key in cds.products]
     print(
         tabulate(
             productList,
