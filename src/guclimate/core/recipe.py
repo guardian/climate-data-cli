@@ -10,7 +10,10 @@ class Recipe:
 class Retrieval:
     key: str
     params: dict
+    outputPath: str
 
     def __init__(self, key: str, params: dict):
         self.key = key
         self.params = params
+        self.outputPath = params["output"]
+

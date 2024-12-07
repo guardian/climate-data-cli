@@ -1,15 +1,17 @@
 ---
 name: "Daily temperatures chart"
-description: "Get daily temperature anomalies (global mean) from 1940 to 2024"
+description: "Get daily temperatures (global mean) from 1940 to 2024"
 retrieve:
-  monthly_mean_temp:
+  daily_mean_temp:
     product: derived-era5-single-levels-daily-statistics
     product_type: reanalysis
     variable: 2m_temperature
-    daily_statistic: "daily_mean"
-    year: 1940-2024
+    daily_statistic: daily_mean
+    year: 2024
     month: 1-12
     day: 1-31
+    time_zone: "utc+00:00"
+    frequency: 1_hourly
     output: "./output/temperature/2m_temperature_absolute_1940_2024.grib"
 # process:
 #   t2m_timeseries:

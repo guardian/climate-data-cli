@@ -1,12 +1,12 @@
 from typing_extensions import Annotated
 from pathlib import Path
-from tabulate import tabulate
 import typer
 import yaml
 import os
-from functools import reduce
 from guclimate.retrieve import cds
 from guclimate.core import dataset, requests
+from guclimate.core.recipe import Recipe
+from guclimate.core.runner import Runner
 
 app = typer.Typer(help="Create and run recipes for common tasks")
 
@@ -45,7 +45,14 @@ def run(
     ]
 ):
     with open(path, 'r') as file:
-        recipe = yaml.safe_load(file)
+        recipe_yaml = yaml.safe_load(file)
+        recipe = Recipe(recipe_yaml)
+        runner = Runner(recipe)
+        print("----------------------------")
+        print("Running recipe...")
+        runner.run()
+        return
+    
         retrievals = [key for key in recipe["retrieve"]]
         data = {}
         for key in retrievals:
@@ -54,9 +61,6 @@ def run(
 
             print("----------------------------")
             print(f"Retrieving '{key}'")
-
-            requestByYear = requests.createCDSRequest(retrieval)
-            # print(f"Request {request.params}")
 
             if Path(output).is_file():
                 print(f"Output file exists: {output}")
