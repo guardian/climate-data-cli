@@ -6,9 +6,11 @@ retrieve:
     product: reanalysis-era5-single-levels-monthly-means
     product_type: monthly_averaged_reanalysis
     variable: 2m_temperature
-    year: 1940-2024
-    month: 1-12
+    year: 2024
+    month: 1-11
     time: 00:00
     data_format: grib
-    download_format: zip
+    download_format: unarchived
+    output: "./output/temperature/2m-temp-monthly-2024.grib"
+
 
