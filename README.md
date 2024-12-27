@@ -19,13 +19,24 @@ The easiest way to install miniforge on MacOS is using Homebrew: `brew install m
 To retrieve data from the [Climate Data Store](https://cds.climate.copernicus.eu/), you need to create an ECMWF account first. Once you have created the account, log in and go to your profile page, where you'll find your API token.
 
 Create a `~/.datapirc` conguration file, and paste the following, replacing the key with your API token from the previous step.
+> Note: this project uses the newer [datapi](https://github.com/ecmwf-projects/datapi?tab=readme-ov-file) package instead of [cdsapi](https://github.com/ecmwf/cdsapi)
+
 
 ```
 url: https://cds.climate.copernicus.eu/api
 key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-> Note: this project uses the newer [datapi](https://github.com/ecmwf-projects/datapi?tab=readme-ov-file) package instead of [cdsapi](https://github.com/ecmwf/cdsapi)
+
+With the tool installed you can now run `guclimate retrieve verify`. And you should see output similar to this:
+```
+Verifying CDS credentials
+Credentials verified {...}
+```
+
+### Creating your first recipe
+
+
 
 ## Development
 
