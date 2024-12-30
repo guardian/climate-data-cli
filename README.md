@@ -149,3 +149,28 @@ retrieve:
     month: 1-12
     day: 1-31
 ```
+
+### Sub-region extraction
+
+By default the CDS data covers the entire world, but for some purposes it is useful to extract a sub-region using the `area` parameter. C3S [defines a few standard European regions](https://climate.copernicus.eu/climate-bulletin-about-data-and-analysis) which they use for their reports.
+
+Sticking with the example from above, we need data for the whole world. If we wanted to make that explicit we could define the request as follows:
+
+```yaml
+name: "Daily temperatures chart"
+description: "Get daily temperatures (global mean) for 2024"
+retrieve:
+  daily_mean_temp:
+    product: derived-era5-single-levels-daily-statistics
+    product_type: reanalysis
+    variable: 2m_temperature
+    daily_statistic: daily_mean
+    time_zone: "utc+00:00"
+    frequency: 1_hourly
+    year: 2024
+    month: 1-12
+    day: 1-31
+    area: [90, -180, -90, 180]
+```
+
+The benefit of doing this is that the retrieved dataset will have its longitude coordinates converted to a `-180, 180` scale, from the default `0, 360` scale.
