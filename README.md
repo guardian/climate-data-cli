@@ -34,10 +34,6 @@ Verifying CDS credentials
 Credentials verified {...}
 ```
 
-### Creating your first recipe
-
-
-
 ## Development
 
 ### Install the module for local development
@@ -63,4 +59,93 @@ conda env update --file environment.yml --prune
 
 ```
 python -m run_tests
+```
+
+## API
+
+To retrieve data from the CDS api and process it, you need to create a recipe. Recipes are written in [YAML](https://yaml.org/).
+
+At its most basic, a recipe consists of a name and a description. For example:
+
+```yaml
+---
+name: "Daily temperatures 2024"
+description: "Get daily temperatures (global mean) for 2024"
+```
+
+To retrieve CDS data, define a new key under the `retrieve` keyword, to refer to your dataset. In this case we'll call it `daily_mean_temp`:
+
+```yaml
+---
+name: "Daily temperatures 2024"
+description: "Get daily temperatures (global mean) for 2024"
+retrieve:
+  daily_mean_temp:
+```
+
+Next we need to define the parameters for the data we want to retrieve. The parameter names and values should match what you find in the [CDS web interface](https://cds.climate.copernicus.eu/datasets/derived-era5-single-levels-daily-statistics?tab=download) (click _Show API Request Code_).
+
+For instance, this is what we would find in the web interface:
+
+```python
+import cdsapi
+
+dataset = "derived-era5-single-levels-daily-statistics"
+request = {
+    "product_type": "reanalysis",
+    "variable": ["2m_temperature"],
+    "daily_statistic": "daily_mean",
+    "time_zone": "utc+00:00",
+    "frequency": "1_hourly"
+}
+
+client = cdsapi.Client()
+client.retrieve(dataset, request).download()
+```
+
+And this is what it looks like in our recipe:
+
+```yaml
+---
+name: "Daily temperatures chart"
+description: "Get daily temperatures (global mean) for 2024"
+retrieve:
+  daily_mean_temp:
+    product: derived-era5-single-levels-daily-statistics
+    product_type: reanalysis
+    variable: 2m_temperature
+    daily_statistic: daily_mean
+    time_zone: "utc+00:00"
+    frequency: 1_hourly
+```
+
+We also need to define the timeframe that we're interested in, using the `year`, `month` and `day` parameters. These parameters are treated slightly differently, so that we can simply write:
+
+```yaml
+month: 1-12
+```
+
+rather than:
+
+```yaml
+month: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+```
+
+Here's what our recipe looks like when we add those parameters:
+
+```yaml
+---
+name: "Daily temperatures chart"
+description: "Get daily temperatures (global mean) for 2024"
+retrieve:
+  daily_mean_temp:
+    product: derived-era5-single-levels-daily-statistics
+    product_type: reanalysis
+    variable: 2m_temperature
+    daily_statistic: daily_mean
+    time_zone: "utc+00:00"
+    frequency: 1_hourly
+    year: 2024
+    month: 1-12
+    day: 1-31
 ```
