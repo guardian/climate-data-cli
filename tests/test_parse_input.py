@@ -9,6 +9,7 @@ numeric_inputs = [
     ("1-3", ["01", "02", "03"]),
 ]
 
+
 @pytest.mark.parametrize("test_input, expected", numeric_inputs)
 def test_parse_numeric(test_input, expected):
     assert parseNumeric(test_input) == expected
@@ -29,6 +30,7 @@ time_inputs = [
         "21:00", "22:00", "23:00"
     ]),
 ]
+
 
 @pytest.mark.parametrize("test_input, expected", time_inputs)
 def test_parse_time(test_input, expected):

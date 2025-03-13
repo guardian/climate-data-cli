@@ -5,11 +5,14 @@ from guclimate.retrieve.parse_input import parseNumeric, parseTime
 
 NUMERIC_PARAMS = ["year", "years", "month", "months", "day", "days"]
 
+
 class ResultFormat(str, Enum):
     ZIP = "zip"
 
+
 class CDSRequest:
     """Definition for request from Climate Data Store (CDS)"""
+
     product: str
     params: dict
 
@@ -63,7 +66,7 @@ class CDSRequest:
 
     def getDays(self) -> List[str]:
         return self.params.get("day", [])
-    
+
     def setDays(self, days: List[str]):
         self.params["day"] = days
 
@@ -78,6 +81,7 @@ class CDSRequest:
                 request.setDays([day])
                 requests.append(request)
             return requests
+
 
 def createCDSRequest(config: dict) -> CDSRequest:
     if "product" not in config:

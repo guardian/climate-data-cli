@@ -8,7 +8,8 @@ from guclimate.core import requests
 
 logging.basicConfig(level="ERROR")
 
-def getProducts(query = None):
+
+def getProducts(query=None):
     client = ApiClient()
     collections = client.get_collections(query=query)
     return collections.json["collections"]
@@ -18,6 +19,7 @@ def verify():
     client = ApiClient()
     response = client.check_authentication()
     return response
+
 
 def retrieve(request: requests.CDSRequest) -> str:
     with tempfile.NamedTemporaryFile() as downloadPath:
@@ -29,8 +31,11 @@ def retrieve(request: requests.CDSRequest) -> str:
 
         # saveResults(downloadPath.name, outputPath)
 
+
 def saveResults(
-    downloadPath: str, outputPath: str, format: requests.ResultFormat = requests.ResultFormat.ZIP
+    downloadPath: str,
+    outputPath: str,
+    format: requests.ResultFormat = requests.ResultFormat.ZIP,
 ):
     if format == requests.ResultFormat.ZIP:
         extractAndSave(downloadPath, outputPath)
@@ -38,7 +43,9 @@ def saveResults(
 
 def extractAndSave(downloadPath: str, outputPath: str):
     with tempfile.TemporaryDirectory() as tempDir:
-        shutil.unpack_archive(downloadPath, tempDir, format=requests.ResultFormat.ZIP.value)
+        shutil.unpack_archive(
+            downloadPath, tempDir, format=requests.ResultFormat.ZIP.value
+        )
 
         extracted_files = [os.path.join(tempDir, file) for file in os.listdir(tempDir)]
         sorted_files = sorted(extracted_files)

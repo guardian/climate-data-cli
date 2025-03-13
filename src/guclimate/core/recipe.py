@@ -16,4 +16,3 @@ class Retrieval:
         self.key = key
         self.params = params
         self.outputPath = params["output"]
-

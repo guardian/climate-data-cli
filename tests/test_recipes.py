@@ -2,6 +2,7 @@ import pytest
 import yaml
 from guclimate.core.recipe import Recipe, Retrieval
 
+
 @pytest.mark.datafiles("sample-recipes/get_monthly_mean_temp_since_1940.yaml")
 def test_get_retrievals(datafiles):
     for file in datafiles.iterdir():

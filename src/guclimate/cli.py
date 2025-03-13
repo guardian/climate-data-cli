@@ -9,6 +9,7 @@ app.add_typer(retrieve.app, name="retrieve")
 app.add_typer(process.app, name="process")
 app.add_typer(recipes.app, name="recipes")
 
+
 def _version_callback(value: bool) -> None:
     if value:
         typer.echo(f"{__app_name__} v{__version__}")

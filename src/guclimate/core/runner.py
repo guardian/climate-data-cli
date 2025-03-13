@@ -4,7 +4,8 @@ from guclimate.retrieve import cds
 from datapi import ApiClient
 from pathlib import Path
 
-class Runner():
+
+class Runner:
     def __init__(self, recipe: Recipe):
         self.recipe = recipe
 
@@ -28,12 +29,11 @@ class Runner():
 
         request = requests.createCDSRequest(retrieval.params)
         requestList = self.splitRequestIfNeeded(request)
-        print(f"Number of requests: {len(requestList)}") 
+        print(f"Number of requests: {len(requestList)}")
 
         files = [cds.retrieve(request) for request in requestList]
         for file in files:
             print(f"Retrieved file: {file}")
-      
 
     def shouldSplitRequest(self, request):
         client = ApiClient()
@@ -41,16 +41,13 @@ class Runner():
 
         shouldSplit = estimate["cost"] > estimate["limit"]
         if shouldSplit:
-          print(f"Splitting request... {estimate}")
-        
+            print(f"Splitting request... {estimate}")
+
         return shouldSplit
-    
+
     def splitRequestIfNeeded(self, request):
         if self.shouldSplitRequest(request):
             # split by year
             return request.splitByYear()
         else:
             return [request]
-        
-
-        

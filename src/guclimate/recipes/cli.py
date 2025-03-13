@@ -10,10 +10,12 @@ from guclimate.core.runner import Runner
 
 app = typer.Typer(help="Create and run recipes for common tasks")
 
+
 def validateInputPath(path: str):
     if not os.path.exists(path):
         raise typer.BadParameter(f"Path does not exist: {path}")
     return path
+
 
 @app.command(help="Print a summary of a given recipe")
 def inspect(
@@ -23,9 +25,9 @@ def inspect(
             help="Path to recipe file, e.g. ./my_recipe.yaml",
             callback=validateInputPath,
         ),
-    ]
+    ],
 ):
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         recipe = yaml.safe_load(file)
         print("----------------------------")
         print(f"Recipe: {recipe['name']}")
@@ -42,9 +44,9 @@ def run(
             help="Path to recipe file, e.g. ./my_recipe.yaml",
             callback=validateInputPath,
         ),
-    ]
+    ],
 ):
-    with open(path, 'r') as file:
+    with open(path, "r") as file:
         recipe_yaml = yaml.safe_load(file)
         recipe = Recipe(recipe_yaml)
         runner = Runner(recipe)
@@ -52,7 +54,7 @@ def run(
         print("Running recipe...")
         runner.run()
         return
-    
+
         retrievals = [key for key in recipe["retrieve"]]
         data = {}
         for key in retrievals:

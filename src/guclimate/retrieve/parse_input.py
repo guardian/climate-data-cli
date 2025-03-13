@@ -5,6 +5,7 @@ import re
 # INTEGER INPUT #
 #################
 
+
 def parseNumeric(input: str | int):
     if isinstance(input, int):
         return [str(input).zfill(2)]
@@ -47,22 +48,24 @@ def parseCommaSeparatedIntegers(input: str):
     months = [int(c) for c in components]
     return [str(month).zfill(2) for month in months]
 
+
 ######################
 # TIME INPUT (HH:MM) #
 ######################
 
+
 def parseTime(input: str):
-    ## Match single time
+    # Match single time
     pattern = re.compile(r"^[0-9]{2}:[0-9]{2}$")
     if pattern.match(input) is not None:
         return [input]
 
-    ## Match comma separated times
+    # Match comma separated times
     commaSeparated = parseCommaSeparatedTimes(input)
     if commaSeparated is not None:
         return commaSeparated
 
-    ## Match time range
+    # Match time range
     range = parseTimeRange(input)
     if range is not None:
         return range

@@ -1,6 +1,7 @@
 import pytest
 from guclimate.core import requests
 
+
 def test_create_temperature_anomaly_request():
     request = requests.createCDSRequest(
         {
@@ -34,6 +35,7 @@ def test_create_cds_request_no_product():
             "months": "01, 02",
         }
         requests.createCDSRequest(user_input)
+
 
 def test_get_years():
     request = requests.createCDSRequest(
@@ -85,6 +87,7 @@ def test_get_months():
         }
     )
     assert request.getMonths() == ["02", "03", "04", "05"]
+
 
 def test_split_by_month():
     request = requests.createCDSRequest(

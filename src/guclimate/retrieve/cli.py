@@ -9,11 +9,13 @@ from tabulate import tabulate
 
 app = typer.Typer(help="Retrieve data from the Copernicus Climate Data Store (CDS)")
 
+
 def validatePath(path: str):
     outputDir = os.path.dirname(path)
     if not os.path.exists(outputDir):
         raise typer.BadParameter(f"Output directory '{outputDir}' does not exist")
     return path
+
 
 @app.command(help="Verify CDS credentials")
 def verify():
@@ -60,7 +62,7 @@ def anomalies(
         typer.Argument(
             help="Where to store the data, e.g. (./anomalies.nc)", callback=validatePath
         ),
-    ]
+    ],
 ):
     questions = [
         inquirer.List(
@@ -120,7 +122,7 @@ def monthlymeans(
             help="Where to store the data, e.g. (./output/monthly-means.nc)",
             callback=validatePath,
         ),
-    ]
+    ],
 ):
     questions = [
         inquirer.List(
