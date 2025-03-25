@@ -7,7 +7,7 @@ retrieve:
     product_type: anomaly
     variable: surface_air_temperature
     time_aggregation: 1_month_mean
-    climate_reference_period: "1991_2020"
+    climate_reference_period: "1850_1900"
     origin: "era5"
     year: 2020-2024
     month: 1-12

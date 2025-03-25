@@ -1,7 +1,9 @@
 from enum import Enum
 from functools import reduce
 from typing import List, Self
-from guclimate.retrieve.parse_input import parseNumeric, parseTime
+from .parse_input import parseNumeric, parseTime
+from .ui import highlighted_list
+from tabulate import tabulate
 
 NUMERIC_PARAMS = ["year", "years", "month", "months", "day", "days"]
 
@@ -81,6 +83,23 @@ class CDSRequest:
                 request.setDays([day])
                 requests.append(request)
             return requests
+
+    def print(self, before="\n", after="\n"):
+        dataset_and_params = [["Dataset", self.product]]
+        dataset_and_params.extend(self.params.items())
+
+        if before is not None:
+            print(before, end="")
+
+        print(
+            tabulate(
+                [[pair[0], highlighted_list(pair[1])] for pair in dataset_and_params],
+                headers=["Option", "Value"],
+                tablefmt="simple_grid",
+                maxcolwidths=[50, None],
+            ),
+            end=after,
+        )
 
 
 def createCDSRequest(config: dict) -> CDSRequest:

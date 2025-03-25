@@ -1,6 +1,18 @@
 from inquirer import errors
 from collections.abc import Callable
 import re
+import os
+
+
+def validatePath(path: str):
+    outputDir = os.path.dirname(path)
+
+    if not os.path.exists(outputDir):
+        raise errors.ValidationError(
+            "", reason=f"Output directory '{outputDir}' does not exist"
+        )
+
+    return path
 
 
 def isInteger(_, current):

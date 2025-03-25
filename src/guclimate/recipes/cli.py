@@ -72,6 +72,7 @@ def run(
                 continue
 
             originalRequest = requests.createCDSRequest(retrieval)
+
             allRequests = [
                 requestByDay
                 for requestByYear in originalRequest.splitByYear()
