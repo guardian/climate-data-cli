@@ -1,6 +1,6 @@
 import typer
 import inquirer
-from ..core.ui import color
+from ..core import ui
 import os
 import logging
 import requests
@@ -15,7 +15,7 @@ app = typer.Typer(
     help="Make and view requests in the Copernicus Climate Data Store (CDS)"
 )
 
-logging.basicConfig(level="ERROR")
+logging.basicConfig(level="CRITICAL")
 
 
 @app.command(help="Create new request", name="new")
@@ -51,21 +51,24 @@ def new_request():
     try:
         client = ApiClient(progress=False)
         client.submit(collection_id=request.product, request=request.params)
-    except requests.HTTPError as err:
-        print(err)
 
-        pdb.set_trace()
+        ui.success("Request submitted to CDS.", after="\n\n")
+
+        print(
+            f"You can view and download requests using {ui.color('blue', 'guclimate requests list')},"
+            + " or at https://cds.climate.copernicus.eu/requests.\n"
+        )
+
+    except requests.HTTPError as err:
+        response = err.response.json()
+
+        ui.error("Request rejected by CDS. Here's what they said:")
+
+        print('"' + response["detail"] + '"')
 
     except Exception as err:
+        ui.error("Request unexpectedly failed.")
         print(err)
-
-    print(
-        f"[{color('green', '!')}] Request submitted to CDS.\n\n"
-        + f"You can view and download requests using {color('blue', 'guclimate requests list')},"
-        + " or at https://cds.climate.copernicus.eu/requests.\n"
-    )
-
-    # pdb.set_trace()
 
 
 @app.command(help="List requests", name="list")
@@ -150,6 +153,12 @@ def list_requests():
             with CdsTransformer(download) as transformer:
                 transformer.save_as("csv", full_download_path)
 
+                ui.success(
+                    f"'{filename}' successfully created."
+                    + " Run [blue]open .[/blue] to see the file in Finder",
+                    before="\n",
+                )
+
 
 def format_job_dataset_variable(job):
     variable = job["parameters"]["variable"]
@@ -168,18 +177,18 @@ def format_job_status(job):
         and job["metadata"]["results"].get("type")
         and job["metadata"]["results"]["type"] == "results expired"
     ):
-        return color("grey", "∅ Expired   ")
+        return ui.color("grey", "∅ Expired   ")
 
     if job["status"] == "successful":
-        return color("green", "✔ Complete  ")
+        return ui.color("green", "✔ Complete  ")
 
     if job["status"] == "accepted" or job["status"] == "running":
-        return color("yellow", "⏺︎ Running  ")
+        return ui.color("yellow", "⏺︎ Running  ")
 
     if job["status"] == "failed":
-        return color("red", "✗ Failed    ")
+        return ui.color("red", "✗ Failed    ")
 
-    return color("red", "⏺︎ Unknown  ")
+    return ui.color("red", "⏺︎ Unknown  ")
 
 
 def format_iso_date(date):

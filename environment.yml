@@ -2,7 +2,7 @@ name: climate-data
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.13
   - pip
   - datapi
   - numpy
@@ -18,4 +18,12 @@ dependencies:
   - jupyterlab
   - matplotlib
   - nc-time-axis
+  - inquirer
+  - typer
+  - tabulate
+  - rich
+  - shellingham
+  - openpyxl
+  - conda-pack
+  - pyinstaller
 prefix: ./.env

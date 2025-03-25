@@ -1,3 +1,5 @@
+from rich import print
+
 fg = {
     "cyan": "\033[1;36m",
     "yellow": "\033[1;33m",
@@ -21,6 +23,18 @@ bg = {
 }
 
 reset = "\033[0m"
+
+
+def message(text: str, after="\n", before=""):
+    print(f"{before}[[yellow]![/yellow]] {text}{after}", end="")
+
+
+def success(text: str, after="\n", before=""):
+    print(f"{before}[[green]![/green]] {text}{after}", end="")
+
+
+def error(text: str, after="\n", before=""):
+    print(f"{before}[[red]![/red]] {text}{after}", end="")
 
 
 def color(color, text):

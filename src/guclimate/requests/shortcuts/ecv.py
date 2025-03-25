@@ -6,7 +6,7 @@ from ...core import requests, ui
 def anomlies():
     answers = collect_ecv_answers()
 
-    # CDS expects the variable parameter to be an array, even with a single value
+    # CDS expects all parameters to be arrays, even if they're single values
     answers["variable"] = [answers["variable"]]
     answers["time_aggregation"] = [answers["time_aggregation"]]
     answers["climate_reference_period"] = [answers["climate_reference_period"]]
@@ -24,7 +24,7 @@ def anomlies():
 def monthly_means():
     answers = collect_ecv_answers()
 
-    # CDS expects the variable parameter to be an array, even with a single value
+    # CDS expects all parameters to be arrays, even if they're single values
     answers["variable"] = [answers["variable"]]
     answers["time_aggregation"] = [answers["time_aggregation"]]
     answers["climate_reference_period"] = [answers["climate_reference_period"]]

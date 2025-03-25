@@ -45,7 +45,7 @@ class CdsTransformer:
 
     def _load_as_grib(self):
         datasets = [
-            xr.open_dataset(file, engine="cfgrib")
+            xr.open_dataset(file, engine="cfgrib", decode_timedelta=False)
             for file in self.download.get_file_paths()
         ]
 
