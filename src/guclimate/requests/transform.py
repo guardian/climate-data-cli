@@ -1,8 +1,10 @@
-import pdb
 import xarray as xr
 from typing import Literal
-
 from .download import CdsDownload
+from cfgrib.xarray_to_grib import to_grib
+import xcdat
+import os
+import shutil
 
 
 class CdsTransformer:
@@ -19,29 +21,53 @@ class CdsTransformer:
 
         if len(file_types) > 1:
             raise ValueError(
-                f"Multiple file types found in downloaded files: {', '.join(file_types)}"
+                f"Multiple file types found in downloaded files: {
+                    ', '.join(file_types)}"
             )
 
-        if file_types[0] == ".grib":
-            self._load_as_grib()
-        else:
+        if file_types[0] != ".grib":
             raise ValueError(
                 f"Downloading '{file_types[0]}' is not currently supported"
             )
 
         return self
 
-    def save_as(self, type: Literal["csv"], filename: str):
-        if getattr(self, "data") is None:
-            raise ValueError("Data must be loaded before converting")
-
+    def save_as(self, type: Literal["csv", "ncdf", "grib"], filename: str):
         if type == "csv":
-            self._save_as_csv(filename)
-
-        pass
+            self._load_as_grib()
+            return self._save_as_csv(filename)
+        elif type == "grib":
+            return self._save_as_grib(filename)
+        elif type == "nc":
+            self._load_as_grib()
+            return self._save_as_ncdf(filename)
 
     def _save_as_csv(self, filename: str):
         self.data.to_dataframe().to_csv(filename)
+        return create_save_info_dict(filename, 1)
+
+    def _save_as_grib(self, filename: str):
+        # For now we assume that only .grib files come from the API, so we don't need to load
+        # anything into memory, only move the files from the archive
+
+        if len(self.download.get_file_paths()) == 1:
+            shutil.copy(self.download.get_file_paths()[0], filename)
+            return create_save_info_dict(filename, 1)
+
+        filename_wo_extension = filename.split(".")[0]
+
+        os.makedirs(filename_wo_extension, exist_ok=True)
+
+        for file in self.download.get_file_paths():
+            shutil.copy(file, filename_wo_extension)
+
+        return create_save_info_dict(
+            filename_wo_extension, len(self.download.get_file_paths())
+        )
+
+    def _save_as_ncdf(self, filename: str):
+        self.data.to_netcdf(filename)
+        return create_save_info_dict(filename, 1)
 
     def _load_as_grib(self):
         datasets = [
@@ -51,5 +77,14 @@ class CdsTransformer:
 
         self.data = xr.concat(datasets, dim="time")
 
+        self.data = xcdat.swap_lon_axis(self.data, (-180, 180))
+
     def __exit__(self, type, value, traceback):
         pass
+
+
+def create_save_info_dict(filename: str, files_created: int):
+    return {
+        "filename": filename,
+        "files_created": files_created,
+    }

@@ -33,6 +33,9 @@ class CdsDownload:
             os.path.splitext(file)[1] for file in self.downloaded_files
         }
 
+    def get_raw_filepath(self):
+        return self._temp_file
+
     def get_file_paths(self):
         return self.downloaded_files
 

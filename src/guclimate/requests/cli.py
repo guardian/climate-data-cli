@@ -6,7 +6,6 @@ import logging
 import requests
 from datapi import ApiClient
 from .shortcuts import ecv
-import pdb
 
 from .download import CdsDownload
 from .transform import CdsTransformer
@@ -55,7 +54,8 @@ def new_request():
         ui.success("Request submitted to CDS.", after="\n\n")
 
         print(
-            f"You can view and download requests using {ui.color('blue', 'guclimate requests list')},"
+            f"You can view and download requests using {
+                ui.color('blue', 'guclimate requests list')},"
             + " or at https://cds.climate.copernicus.eu/requests.\n"
         )
 
@@ -128,6 +128,8 @@ def list_requests():
         chosen_format = inquirer.list_input(
             message="What format should this download be in?",
             choices=[
+                ("GRIB", "grib"),
+                ("NetCDF", "nc"),
                 ("CSV", "csv"),
             ],
         )
@@ -148,16 +150,31 @@ def list_requests():
         full_download_path = os.getcwd() + "/" + filename
 
         with CdsDownload(client, chosen_job["jobID"]) as download:
+            print("\nWorking on it...\n")
+
             download.download()
 
             with CdsTransformer(download) as transformer:
-                transformer.save_as("csv", full_download_path)
+                if chosen_format == "grib":
+                    result = transformer.save_as("grib", full_download_path)
+                elif chosen_format == "nc":
+                    result = transformer.save_as("nc", full_download_path)
+                else:
+                    result = transformer.save_as("csv", full_download_path)
 
-                ui.success(
-                    f"'{filename}' successfully created."
-                    + " Run [blue]open .[/blue] to see the file in Finder",
-                    before="\n",
-                )
+                if result["files_created"] > 1:
+                    ui.success(
+                        f"'{result['filename']}' folder successfully created, "
+                        + f"containing {result['files_created']} files."
+                        + " Run [blue]open .[/blue] to see the file in Finder",
+                        before="\n",
+                    )
+                else:
+                    ui.success(
+                        f"'{result['filename']}' successfully created."
+                        + " Run [blue]open .[/blue] to see the file in Finder",
+                        before="\n",
+                    )
 
 
 def format_job_dataset_variable(job):
