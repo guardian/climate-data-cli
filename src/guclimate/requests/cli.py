@@ -14,8 +14,12 @@ app = typer.Typer(
     help="Make and view requests in the Copernicus Climate Data Store (CDS)"
 )
 
+#  Suppress logs from modules
 logging.basicConfig(level="CRITICAL")
+logging.getLogger("datapi").setLevel("ERROR")
 logging.getLogger("processing").setLevel("CRITICAL")
+logging.getLogger("requests").setLevel("ERROR")
+logging.getLogger("multiurl").setLevel("ERROR")
 
 
 @app.command(help="Create new request", name="new")
@@ -74,7 +78,7 @@ def new_request():
 
 @app.command(help="List requests", name="list")
 def list_requests():
-    client = ApiClient(progress=False)
+    client = ApiClient(progress=False,)
 
     job_choices = []
     longest_name_chars = 0
@@ -96,7 +100,8 @@ def list_requests():
 
     for job in jobs:
         name_and_variable = format_job_dataset_variable(job)
-        name_and_variable += " " * (longest_name_chars - len(name_and_variable) + 3)
+        name_and_variable += " " * \
+            (longest_name_chars - len(name_and_variable) + 3)
 
         formatted_job = (
             name_and_variable
@@ -122,7 +127,8 @@ def list_requests():
         choices=[
             ("Download", "download"),
             (
-                f"{ui.color('grey', 'Store in S3')}   {ui.badge('grey', 'Coming soon')}",
+                f"{ui.color('grey', 'Store in S3')}   {
+                    ui.badge('grey', 'Coming soon')}",
                 "s3",
             ),
         ],
