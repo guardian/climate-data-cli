@@ -15,6 +15,7 @@ app = typer.Typer(
 )
 
 logging.basicConfig(level="CRITICAL")
+logging.getLogger("processing").setLevel("CRITICAL")
 
 
 @app.command(help="Create new request", name="new")
@@ -120,8 +121,12 @@ def list_requests():
         message="What would you like to do with this request?",
         choices=[
             ("Download", "download"),
-            ("Store in S3", "s3"),
+            (
+                f"{ui.color('grey', 'Store in S3')}   {ui.badge('grey', 'Coming soon')}",
+                "s3",
+            ),
         ],
+        validate=lambda _, answer: answer != "s3",
     )
 
     if chosen_action == "download":
